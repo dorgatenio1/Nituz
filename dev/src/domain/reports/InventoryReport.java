@@ -1,0 +1,37 @@
+package domain.reports;
+
+import domain.Product;
+import java.util.Date;
+import java.util.List;
+
+/** Snapshot of current inventory, optionally filtered by category list */
+public class InventoryReport extends Report<Product> {
+    private List<String> categories;
+
+    public InventoryReport(int reportId, List<Product> data, List<String> categories, Date publishDate) {
+        super(reportId, data, publishDate);
+        this.categories = categories;
+    }
+
+    public List<String> getCategories() { return categories; }
+
+    @Override
+    public String getSummary() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Inventory Report - ").append(getPublishDate()).append("\n");
+        if (categories != null && !categories.isEmpty()) {
+            sb.append("Categories: ").append(String.join(", ", categories)).append("\n");
+        }
+        sb.append("Products:\n");
+        for (Product p : getData()) {
+            sb.append("- ").append(p.getName())
+              .append(" (ID: ").append(p.getProductId()).append(")")
+              .append(" | Shelf: ").append(p.getShelfQuantity())
+              .append(", Warehouse: ").append(p.getWarehouseQuantity())
+              .append(", Total: ").append(p.getTotalQuantity())
+              .append(" | Location: ").append(p.getShelfLocation())
+              .append("\n");
+        }
+        return sb.toString();
+    }
+}
