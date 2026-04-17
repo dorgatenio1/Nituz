@@ -20,7 +20,7 @@ public class OrderReport extends Report<Product> {
             sb.append("- ").append(p.getName())
               .append(" (ID: ").append(p.getProductId()).append(")")
               .append(" — current: ").append(p.getTotalQuantity())
-              .append(", minimum: ").append(p.getMinQuantity())
+              .append(", minimum: ").append(p.getMinToRestock())
               .append("\n");
         }
         return sb.toString();
