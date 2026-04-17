@@ -21,8 +21,16 @@ public class Category {
         return categoryName;
     }
 
-    public double getPrice() {return (((100 - discounts.getActiveDiscount(new Date()) / 100)) * getProduct(productId).getPrice(); }
-
+    public double getFinalPrice(int productId) {return (((100 - discounts.getBestActiveDiscount(new Date()) / 100)) * getProduct(productId).getPrice());} 
+    
+    public SoldItem sellItem(int productId, Date sellDate,int itemId) {
+        return getProduct(productId).sellItem(itemId, sellDate, getFinalPrice(productId));
+    }
+    public Product getProduct(int productId) {
+        if (!products.containsKey(productId))
+            throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
+        return products.get(productId);
+    }
     public LinkedList<Product> getProducts() {
         return new LinkedList<>(products.values());
     }
@@ -39,15 +47,9 @@ public class Category {
         if (products.containsKey(product_id))
             throw new IllegalArgumentException("Product " + product_id + " already exists");
         products.put(product_id,
-                new Product(product_id, productName, manufacturer, subCategory, subSubCategory,
-                        shelfLocation, priceWithoutDiscount, minToRestock));
+                new Product(product_id, productName, manufacturer, subCategory, subSubCategory,  shelfLocation, priceWithoutDiscount, minToRestock));
     }
 
-    public Product getProduct(int productId) {
-        if (!products.containsKey(productId))
-            throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
-        return products.get(productId);
-    }
 
     public void removeProduct(int productId) {
         products.remove(productId);
@@ -58,7 +60,8 @@ public class Category {
     }
 
     public void addDiscountForCategory(int percentage, Date startDate, Date endDate) {
-        discounts.addDiscount(percentage, startDate, endDate);
+
+        discounts.addDiscount(new DiscountInfo(percentage, startDate, endDate));
     }
 
     public void addDiscountForProduct(int product_id, int discount, Date startDate, Date endDate) {
@@ -86,5 +89,11 @@ public class Category {
 
     public Discounts getDiscounts() {
         return discounts;
+    }
+ 
+    public DefectItem markItemDefective(int productId, int itemId, String reason) {
+        if (!products.containsKey(productId))
+            throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
+        return products.get(productId).markItemDefective(itemId, reason);
     }
 }

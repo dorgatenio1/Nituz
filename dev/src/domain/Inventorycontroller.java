@@ -8,15 +8,15 @@ public class Inventorycontroller {
     private Map<Integer,String> allProducts;//<product_id,categoryName>
     private Map<String, Category> allCategories;//<CategoryName,Category>;
     private static Inventorycontroller Inventorycontroller = null;
-    private List<Sell> soldItems;
-    private List<Integer> itemsToRestock;
+    private List<SoldItem> soldItems;
+    private List<Integer> ProductsToRestock;
     private Inventorycontroller() {
         defectiveItems = new LinkedList<>();
         allItems = new HashMap<>();
         allCategories=new HashMap<>();
         soldItems=new ArrayList<>();
         allProducts=new HashMap<>();
-        itemsToRestock=new ArrayList<>();
+        ProductsToRestock=new ArrayList<>();
     }
     public static Inventorycontroller getInstance() {
         if(Inventorycontroller==null) {
@@ -31,8 +31,8 @@ public class Inventorycontroller {
             throw new IllegalArgumentException("Product ID " + product_id + " doesn't exists");
         allCategories.get(allProducts.get(product_id)).addNewItem(item_id, supplier_id, basePrice, expirationDate, product_id);
         allItems.put(item_id, product_id);
-        if(!checkMinToRestock(product_id)&&itemsToRestock.contains(product_id))
-            itemsToRestock.remove(itemsToRestock.indexOf(product_id));
+        if(!checkMinToRestock(product_id)&ProductsToRestock.contains(product_id))
+        ProductsToRestock.remove(ProductsToRestock.indexOf(product_id));
     }
     public void addNewProduct(int product_id,String ProdactName,String Manufacturer,String CategoryName,String subCategory,String subSubCategory, int minToRestock,String shelfLocation,int priceWithoutDiscount){
         if(allProducts.containsKey(product_id))
@@ -41,10 +41,10 @@ public class Inventorycontroller {
             throw new IllegalArgumentException("Some of the parameters are null");
         if(!allCategories.containsKey(CategoryName.toLowerCase()))
             allCategories.put(CategoryName.toLowerCase(),new Category(CategoryName.toLowerCase()));
-        allCategories.get(CategoryName.toLowerCase()).addNewProduct(product_id,ProdactName.toLowerCase(),Manufacturer,subCategory,subSubCategory,minToRestock,shelfLocation,priceWithoutDiscount);
+        allCategories.get(CategoryName.toLowerCase()).addProduct(product_id,ProdactName.toLowerCase(),Manufacturer,subCategory,subSubCategory,minToRestock,shelfLocation,priceWithoutDiscount);
         allProducts.put(product_id,CategoryName.toLowerCase());
         if(minToRestock>0)
-            itemsToRestock.add(product_id);
+        ProductsToRestock.add(product_id);
     }
 
     public LinkedList<DefectItem> getDefectiveItems() {
@@ -82,10 +82,10 @@ public class Inventorycontroller {
         if(!allProducts.containsKey(productId))
             throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
         getProduct(productId).updateMinToRestock(minToRestock);
-        if(!itemsToRestock.contains(productId)&&checkMinToRestock(productId))
-            itemsToRestock.add(productId);
-        if(itemsToRestock.contains(productId)&&!checkMinToRestock(productId))
-            itemsToRestock.remove(itemsToRestock.indexOf(productId));
+        if(ProductsToRestock.contains(productId)&&checkMinToRestock(productId))
+        ProductsToRestock.add(productId);
+        if(ProductsToRestock.contains(productId)&&!checkMinToRestock(productId))
+        ProductsToRestock.remove(ProductsToRestock.indexOf(productId));
     }
 
     //public for tests
@@ -102,40 +102,34 @@ public class Inventorycontroller {
         return allCategories.get(allProducts.get(allItems.get(item_id))).getProduct(allItems.get(item_id));
     }
 
-    public void moveToShelf(List<Integer> itemIds) {
-        for(Integer itemId : itemIds) {
-            if(!allItems.containsKey(itemId))
-                throw new IllegalArgumentException("Item ID " + itemId + " doesn't exists");
-            getCategory(itemId).moveItemToShelf(allItems.get(itemId),itemId);
-        }
+    public void moveToShelf(int itemId) {
+        checkIfItemExists(itemId);
+        getCategory(itemId).moveItemToShelf(allItems.get(itemId),itemId);
     }
+    
     private void checkIfItemExists(int itemId) {
         if(!allItems.containsKey(itemId))
             throw new IllegalArgumentException("Item ID " + itemId + " doesn't exists");
     }
     public boolean sellItem(int itemId) {
         checkIfItemExists(itemId);
-        int productId=allItems.get(itemId);
-        Item soldItem=getProduct(productId).removeItem(itemId);
-        if(checkMinToRestock(productId))
-            itemsToRestock.add(productId);
+        SoldItem soldItem = getCategory(itemId).sellItem(allItems.get(itemId),new Date(),itemId);
         if(soldItem!=null){
-            this.soldItems.add(new Sell(getProduct(productId).getPrice(),soldItem,new Date()));
+            this.soldItems.add(soldItem);
+            if(checkMinToRestock(allItems.get(itemId)))
+            ProductsToRestock.add(allItems.get(itemId));
             return true;
         }
         return false;
     }
 
-
     public boolean markItemAsDefective(int itemId,String reason) {
-        if(!allItems.containsKey(itemId))
-            throw new IllegalArgumentException("Item ID " + itemId + " doesn't exists");
-        int productId=allItems.get(itemId);
-        Item defItem=getProduct(productId).removeItem(itemId);
-        if(checkMinToRestock(productId))
-            itemsToRestock.add(productId);
-        if(defItem!=null){
-            this.defectiveItems.add(new DefectItem(defItem,reason));
+        checkIfItemExists(itemId);
+        DefectItem defectItem = getCategory(itemId).markItemDefective(allItems.get(itemId),itemId, reason);
+        if(defectItem!=null){
+            this.defectiveItems.add(defectItem);
+            if(checkMinToRestock(allItems.get(itemId)))
+            ProductsToRestock.add(allItems.get(itemId));
             return true;
         }
         return false;
@@ -183,9 +177,9 @@ public class Inventorycontroller {
             throw new IllegalArgumentException("Category Name " + categoryName.toLowerCase() + " doesn't exists");
         allCategories.get(categoryName.toLowerCase()).addDiscountForCategory(discount,startDate,endDate);
     }
-    public List<Sell> getSoldItemsByDate(Date startDate,Date endDate) {
-        List<Sell> soldItemsInDate = new ArrayList<>();
-        for(Sell sell : this.soldItems) {
+    public List<SoldItem> getSoldItemsByDate(Date startDate,Date endDate) {
+        List<SoldItem> soldItemsInDate = new ArrayList<>();
+        for(SoldItem sell : this.soldItems) {
             if(sell.inRangeDates(startDate, endDate))
                 soldItemsInDate.add(sell);
         }
@@ -203,7 +197,7 @@ public class Inventorycontroller {
     public double getPriceForProduct(int product_id){
         if (!allProducts.containsKey(product_id))
             throw new IllegalArgumentException("Product ID " + product_id + " doesn't exists");
-        return getCategoryByProductId(product_id).getPrice(product_id);
+        return getCategoryByProductId(product_id).getFinalPrice(product_id);
     }
 
     protected Category getCategoryByProductId(int product_id) {
@@ -218,9 +212,9 @@ public class Inventorycontroller {
         this.allProducts = new HashMap<>();
         this.allCategories = new HashMap<>();
         this.soldItems = new ArrayList<>();
-        this.itemsToRestock = new ArrayList<>();
+        this.ProductsToRestock = new ArrayList<>();
     }
-    public boolean checkRestockNeededByItemId(int item_id){
+    public boolean checkRestockByItemId(int item_id){
         Product product = getProductByItemId(item_id);
         return product.needToRestock();
     }
@@ -232,15 +226,15 @@ public class Inventorycontroller {
         Product product = getProduct(product_id);
         List<Integer> res= product.updateShelfAndStorageContents(itemOnSelf,itemOnStock);
         if(checkMinToRestock(product_id))
-            itemsToRestock.add(product_id);
+        ProductsToRestock.add(product_id);
         return res;
     }
-    protected List<Integer> getItemsToRestock() {
-        return new ArrayList<>(itemsToRestock);
+    protected List<Integer> getProductsToRestock() {
+        return new ArrayList<>(ProductsToRestock);
     }
-    public Sell getSoldItemsById(int itemId){
-        for(Sell sell : soldItems) {
-            if(sell.getItem().getID()==itemId)
+    public SoldItem getSoldItemsById(int itemId){
+        for(SoldItem sell : soldItems) {
+            if(sell.getItemId()==itemId)
                 return sell;
         }
         return null;
@@ -252,7 +246,7 @@ public class Inventorycontroller {
         Product product=getProduct(productId);
         product.removeItem(item_id);
         if(product.needToRestock())
-            itemsToRestock.add(productId);
+        ProductsToRestock.add(productId);
     }
     public List<Item> getItemsOutOfDate(){
         List<Item> items=new LinkedList<>();

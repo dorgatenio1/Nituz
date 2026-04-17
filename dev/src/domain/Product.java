@@ -21,11 +21,10 @@
         private List<Item> storageItems;
         public List<Item> expiredItems;
 
-        public Product(int productId, int supplierId, String name, String manufacturer, String subCategory,
+        public Product(int productId,  String name, String manufacturer, String subCategory,
                 String subSubCategory,
                 String shelfLocation, int priceWithoutDiscount, int minToRestock) {
             this.productId = productId;
-            this.supplierId = supplierId;
             this.name = name;
             this.manufacturer = manufacturer;
             this.subCategory = subCategory;
@@ -44,7 +43,7 @@
             return productId;
         }
 
-        public String getName() {+
+        public String getName() {
             return name;
         }
 
@@ -66,10 +65,6 @@
 
         public int getPriceWithoutDiscount() {
             return priceWithoutDiscount;
-        }
-
-        public int getTotalAmount() {
-            return getShelfQuantity() + getWarehouseQuantity();
         }
 
         public int getSupplierId() {
@@ -230,11 +225,11 @@
             this.minToRestock = minQuantity;
         }
 
-        public SoldItem sellItem(int itemId, Date sellDate) {
+        public SoldItem sellItem(int itemId, Date sellDate, double sellPrice) {
             if (!isItemOnShelf(itemId))
                 throw new IllegalArgumentException("Item " + itemId + " doesn't exists on shelf");
             Item item = removeItem(itemId);
-            return item.sell(sellDate, getPrice());
+            return item.sell(sellDate, sellPrice);
         }
 
         public DefectItem markItemDefective(int itemId, String reason) {

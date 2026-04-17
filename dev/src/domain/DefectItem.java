@@ -20,4 +20,8 @@ public class DefectItem extends Item {
     }
     public Date getUpdateDate() { return updateDate; }
     public String getReason() { return reason; }
+
+    public boolean inRangeDates(Date startDate, Date endDate) {
+        return !updateDate.before(startDate) && !updateDate.after(endDate);
+    }
 }

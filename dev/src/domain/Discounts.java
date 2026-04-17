@@ -10,19 +10,8 @@ public class Discounts {
     public Discounts() {
         this.discounts = new ArrayList<>();
     }
-    private boolean hasOverlappingDiscount(DiscountInfo newDiscount) {
-            for (DiscountInfo existingDiscount : discounts) {
-                if (newDiscount.getStartDate().before(existingDiscount.getEndDate()) &&
-                        existingDiscount.getStartDate().before(newDiscount.getEndDate())) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public void addDiscount(DiscountInfo discountInfo) {
-            if (hasOverlappingDiscount(discountInfo))
-                throw new IllegalArgumentException("Cannot add overlapping discount periods");
             this.discounts.add(discountInfo);
         }
     public double getBestActiveDiscount(Date date) {
@@ -35,7 +24,4 @@ public class Discounts {
         return best;
     }
 
-    public List<DiscountInfo> getAllDiscounts() {
-        return discounts;
     }
-}

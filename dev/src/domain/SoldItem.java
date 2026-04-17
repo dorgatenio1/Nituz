@@ -19,4 +19,8 @@ public class SoldItem {
     public double getSellPrice() { return sellPrice; }
     public int getCostPrice() { return costPrice; }
     public Date getSellDate() { return sellDate; }
+
+    public boolean inRangeDates(Date startDate, Date endDate) {
+        return !sellDate.before(startDate) && !sellDate.after(endDate);
+    }
 }
