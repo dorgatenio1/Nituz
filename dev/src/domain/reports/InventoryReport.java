@@ -27,7 +27,7 @@ public class InventoryReport extends Report<Product> {
             sb.append("- ").append(p.getName())
               .append(" (ID: ").append(p.getProductId()).append(")")
               .append(" | Shelf: ").append(p.getShelfQuantity())
-              .append(", Warehouse: ").append(p.getWarehouseQuantity())
+              .append(", Warehouse: ").append(p.getStorageItemsQuantity())
               .append(", Total: ").append(p.getTotalQuantity())
               .append(" | Location: ").append(p.getShelfLocation())
               .append("\n");

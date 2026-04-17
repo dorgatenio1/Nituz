@@ -1,4 +1,4 @@
-package Business_Layer;
+package domain;
 
 import java.util.*;
 
@@ -154,6 +154,14 @@ public class Inventorycontroller {
         return productsToRestock;
     }
 
+    public List<Item> getExpiredItems() {
+        List<Item> expiredItems = new ArrayList<>();
+        for(Category category : allCategories.values()) {
+            expiredItems.addAll(category.getExpiredItems());
+        }
+        return expiredItems;
+    }
+
     public List<DefectItem> getAllDefectiveItems() {
         return (List<DefectItem>)this.defectiveItems.clone();
     }
@@ -248,11 +256,10 @@ public class Inventorycontroller {
         if(product.needToRestock())
         ProductsToRestock.add(productId);
     }
-    public List<Item> getItemsOutOfDate(){
-        List<Item> items=new LinkedList<>();
-        for(Product product:getAllAvailableProducts()){
-            items.addAll(product.getItemsOutOfDate());
-        }
-        return items;
+
+    public int getProductId(int itemId) {
+        if (!allItems.containsKey(itemId))
+            throw new IllegalArgumentException("Item ID " + itemId + " doesn't exist");
+        return allItems.get(itemId);
     }
 }

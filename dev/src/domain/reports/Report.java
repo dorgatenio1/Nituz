@@ -18,4 +18,7 @@ public abstract class Report<T> {
     public List<T> getData() { return data; }
     public Date getPublishDate() { return publishDate; }
     public abstract String getSummary();
+
+    @Override
+    public String toString() { return getSummary(); }
 }

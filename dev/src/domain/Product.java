@@ -98,10 +98,7 @@
         public double getPrice() {
             return priceWithoutDiscount * (((100 - discounts.getBestActiveDiscount(new Date())) / 100));
         }
-
-        public List<Item> getExpiredItems() {
-            return expiredItems;
-        }   
+ 
 
         public void addNewItem(int item_id, int supplier_id, int basePrice, Date expirationDate) {
             if (storageItems.contains(item_id) || shelfItems.contains(item_id))
@@ -149,8 +146,7 @@
 
         // Discount
         public void addDiscount(DiscountInfo discountInfo) {
-            this.discounts.addDiscount(discountInfo.getPercentage(), discountInfo.getStartDate(),
-                    discountInfo.getEndDate());
+            this.discounts.addDiscount(discountInfo);
         }
 
         public Item getItem(int itemId) {

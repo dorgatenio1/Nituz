@@ -50,6 +50,13 @@ public class Category {
                 new Product(product_id, productName, manufacturer, subCategory, subSubCategory,  shelfLocation, priceWithoutDiscount, minToRestock));
     }
 
+    public List<Item> getExpiredItems() {
+        List<Item> expiredItems = new ArrayList<>();
+        for (Product product : products.values()) {
+            expiredItems.addAll(product.getItemsOutOfDate());
+        }
+        return expiredItems;
+    }
 
     public void removeProduct(int productId) {
         products.remove(productId);

@@ -25,7 +25,6 @@ public class DefectReport extends Report<DefectItem> {
         sb.append("Defective items:\n");
         for (DefectItem item : getData()) {
             sb.append("- Barcode: ").append(item.getItemId())
-              .append(" (Product ID: ").append(item.getProductId()).append(")")
               .append(" | Reason: ").append(item.getReason())
               .append(" | Reported: ").append(item.getUpdateDate())
               .append("\n");

@@ -24,10 +24,10 @@ public class ExpiredReport extends Report<Item> {
         sb.append("Period: ").append(startDate).append(" to ").append(endDate).append("\n");
         sb.append("Expired items:\n");
         for (Item item : getData()) {
-            sb.append("- Barcode: ").append(item.getItemId())
-              .append(" (Product ID: ").append(item.getProductId()).append(")")
+            sb.append("- Barcode: ").append(item.getItemId())        
               .append(" | Expired: ").append(item.getExpirationDate())
               .append("\n");
         }
         return sb.toString();
     }
+}
