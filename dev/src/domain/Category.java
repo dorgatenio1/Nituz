@@ -31,9 +31,6 @@ public class Category {
             throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
         return products.get(productId);
     }
-    public LinkedList<Product> getProducts() {
-        return new LinkedList<>(products.values());
-    }
 
     public void addNewItem(int item_id, int supplier_id, int basePrice, Date expirationDate, int product_id) {
         if (!products.containsKey(product_id))
@@ -64,6 +61,10 @@ public class Category {
 
     public List<Product> getAllProducts() {
         return new ArrayList<>(products.values());
+    }
+
+    public List<Product> getProducts() {
+        return getAllProducts();
     }
 
     public void addDiscountForCategory(int percentage, Date startDate, Date endDate) {

@@ -1,6 +1,6 @@
-package Presentation_Layer;
+package presentation;
 
 public interface InputReader {
-    public String readString();
-    public int readInt();
+    String readString();
+    int readInt();
 }

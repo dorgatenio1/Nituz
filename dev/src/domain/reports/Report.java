@@ -1,9 +1,12 @@
 package domain.reports;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public abstract class Report<T> {
+
+    protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private int reportId = 0;
     private List<T> data = null;
     private Date publishDate = null;

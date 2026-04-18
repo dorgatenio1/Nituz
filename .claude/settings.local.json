@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/דור/Desktop/**)",
+      "Bash(dir \"C:\\\\Users\\\\דור\\\\Desktop\\\\Nituz 2\")",
+      "Bash(xargs grep:*)",
+      "Bash(javac -cp dev/src -d dev/out dev/src/domain/*.java dev/src/domain/reports/*.java dev/src/service/*.java dev/src/presentation/*.java)"
+    ]
+  }
+}

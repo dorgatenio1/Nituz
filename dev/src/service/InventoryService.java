@@ -4,7 +4,7 @@ import domain.*;
 import domain.reports.Report;
 import java.util.*;
 
-public class InventoryService implements InventoryServiceInterface {
+public class InventoryService  {
 
     private final Inventorycontroller controller;
     private final Reportcontroller reportController;
@@ -16,7 +16,7 @@ public class InventoryService implements InventoryServiceInterface {
 
     // --- Product Management ---
 
-    @Override
+    
     public Response<Boolean> addNewProduct(int productId, String name, String manufacturer,
             String categoryName, String subCategory, String subSubCategory,
             int minToRestock, String shelfLocation, int priceWithoutDiscount) {
@@ -29,7 +29,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> addNewItem(int itemId, int supplierId, int basePrice,
             Date expirationDate, int productId) {
         try {
@@ -40,7 +40,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> updateMinToRestock(int productId, int minToRestock) {
         try {
             controller.updateMinToRestock(productId, minToRestock);
@@ -50,7 +50,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Product> getProduct(int productId) {
         try {
             return new Response<>(controller.getProduct(productId), "");
@@ -59,7 +59,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> removeItem(int itemId) {
         try {
             controller.removeItem(itemId);
@@ -69,7 +69,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> moveToShelf(List<Integer> itemIds) {
         try {
             for (int itemId : itemIds)
@@ -80,7 +80,17 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+
+    public Response<Boolean> removeProduct(int productId) {
+        try {
+            controller.removeProduct(productId);
+            return new Response<>(true, "Product removed");
+        } catch (Exception e) {
+            return new Response<>(e.getMessage());
+        }
+     }
+
+     
     public Response<Boolean> setDefectiveItem(int itemId, String reason) {
         try {
             boolean result = controller.markItemAsDefective(itemId, reason);
@@ -92,7 +102,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> addDiscountForProduct(int productId, int discount,
             Date startDate, Date endDate) {
         try {
@@ -103,7 +113,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> itemSell(int itemId) {
         try {
             boolean result = controller.sellItem(itemId);
@@ -115,7 +125,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Double> getPriceForProduct(int productId) {
         try {
             return new Response<>(controller.getPriceForProduct(productId), "");
@@ -126,7 +136,7 @@ public class InventoryService implements InventoryServiceInterface {
 
     // --- Category Management ---
 
-    @Override
+    
     public Response<List<String>> getCategories() {
         try {
             return new Response<>(controller.getAllCategories(), "");
@@ -135,7 +145,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Category> getCategory(String categoryName) {
         try {
             Category cat = controller.getCategory(categoryName);
@@ -147,7 +157,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> addDiscountForCategory(String categoryName, int discount,
             Date startDate, Date endDate) {
         try {
@@ -160,7 +170,7 @@ public class InventoryService implements InventoryServiceInterface {
 
     // --- Inventory Count ---
 
-    @Override
+    
     public Response<Boolean> inventoryCount(int productId, int inStorage, int onShelf) {
         try {
             controller.inventoryCount(productId, inStorage, onShelf);
@@ -170,7 +180,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<List<Integer>> updateShelfAndStorageContents(int productId,
             List<Integer> itemsOnShelf, List<Integer> itemsInStock) {
         try {
@@ -184,7 +194,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<List<String>> showProductToRestock() {
         try {
             return new Response<>(controller.getProductsNeedingRestock(), "");
@@ -193,7 +203,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> checkMinToRestock(int productId) {
         try {
             return new Response<>(controller.checkMinToRestock(productId), "");
@@ -202,7 +212,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<Boolean> checkRestockByItemId(int itemId) {
         try {
             return new Response<>(controller.checkRestockByItemId(itemId), "");
@@ -213,7 +223,7 @@ public class InventoryService implements InventoryServiceInterface {
 
     // --- Sold Items ---
 
-    @Override
+    
     public Response<List<SoldItem>> getSoldItemsByDate(Date startDate, Date endDate) {
         try {
             return new Response<>(controller.getSoldItemsByDate(startDate, endDate), "");
@@ -222,7 +232,7 @@ public class InventoryService implements InventoryServiceInterface {
         }
     }
 
-    @Override
+    
     public Response<SoldItem> getSoldItemById(int itemId) {
         try {
             SoldItem item = controller.getSoldItemsById(itemId);
@@ -236,54 +246,54 @@ public class InventoryService implements InventoryServiceInterface {
 
     // --- Reports ---
 
-    @Override
+    
     public Response<String> getInventoryReport(List<String> categoryNames) {
         Response<Report<?>> r = reportController.generateInventoryReport(categoryNames);
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<String> getDefectReport() {
         Response<Report<?>> r = reportController.generateDefectReport();
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<String> getDefectReport(Date startDate, Date endDate) {
         Response<Report<?>> r = reportController.generateDefectReport(startDate, endDate);
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<String> getExpiredReport() {
         Response<Report<?>> r = reportController.generateExpiredReport();
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<String> getExpiredReport(Date startDate, Date endDate) {
         Response<Report<?>> r = reportController.generateExpiredReport(startDate, endDate);
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<String> getOrderReport() {
         Response<Report<?>> r = reportController.generateOrderReport();
         if (!r.isSuccess()) return new Response<>(r.getMessage());
         return new Response<>(r.getValue().getSummary(), "");
     }
 
-    @Override
+    
     public Response<Report<?>> getReportById(int reportId) {
         return reportController.getReportById(reportId);
     }
 
-    @Override
+    
     public Response<List<Report<?>>> getAllReports() {
         return reportController.getAllReports();
     }

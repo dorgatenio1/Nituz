@@ -18,7 +18,7 @@ public class InventoryReport extends Report<Product> {
     @Override
     public String getSummary() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Inventory Report - ").append(getPublishDate()).append("\n");
+        sb.append("Inventory Report - ").append(DATE_FORMAT.format(getPublishDate())).append("\n");
         if (categories != null && !categories.isEmpty()) {
             sb.append("Categories: ").append(String.join(", ", categories)).append("\n");
         }
@@ -26,6 +26,8 @@ public class InventoryReport extends Report<Product> {
         for (Product p : getData()) {
             sb.append("- ").append(p.getName())
               .append(" (ID: ").append(p.getProductId()).append(")")
+              .append(" sub category: ").append(p.getSubCategory())
+              .append(" subsub category: ").append(p.getSubSubCategory())
               .append(" | Shelf: ").append(p.getShelfQuantity())
               .append(", Warehouse: ").append(p.getStorageItemsQuantity())
               .append(", Total: ").append(p.getTotalQuantity())

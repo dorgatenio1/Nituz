@@ -14,12 +14,12 @@ public class OrderReport extends Report<Product> {
     @Override
     public String getSummary() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Order Report - ").append(getPublishDate()).append("\n");
+        sb.append("Order Report - ").append(DATE_FORMAT.format(getPublishDate())).append("\n");
         sb.append("Products to restock:\n");
         for (Product p : getData()) {
             sb.append("- ").append(p.getName())
               .append(" (ID: ").append(p.getProductId()).append(")")
-              .append(" — current: ").append(p.getTotalQuantity())
+              .append(" - current: ").append(p.getTotalQuantity())
               .append(", minimum: ").append(p.getMinToRestock())
               .append("\n");
         }

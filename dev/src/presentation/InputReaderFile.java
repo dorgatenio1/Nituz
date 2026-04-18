@@ -1,37 +1,39 @@
-package Presentation_Layer;
+package presentation;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
 public class InputReaderFile implements InputReader {
-    private Stack<String> inputs;
 
-    public InputReaderFile(String pathToTestFile) {
-        inputs = new Stack<>();
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(Paths.get(pathToTestFile));
-            for(int i=lines.size()-1;i>=0;i--) {
-                if (lines.get(i).length()>=1 && !lines.get(i).startsWith("/")) {
-                    inputs.push(lines.get(i));
-                }
+    private final Stack<String> lines;
+
+    public InputReaderFile(String filePath) throws IOException {
+        List<String> allLines = Files.readAllLines(Paths.get(filePath));
+        lines = new Stack<>();
+        for (int i = allLines.size() - 1; i >= 0; i--) {
+            String line = allLines.get(i);
+            if (!line.startsWith("/")) {
+                lines.push(line.trim());
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public String readString() {
-        if( !inputs.isEmpty())
-            return inputs.pop();
-        else
-            return "";
+        if (lines.isEmpty()) return "";
+        return lines.pop();
     }
 
+    @Override
     public int readInt() {
-        return Integer.parseInt(readString());
+        try {
+            return Integer.parseInt(readString());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }

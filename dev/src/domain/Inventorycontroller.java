@@ -135,12 +135,13 @@ public class Inventorycontroller {
         return false;
     }
 
-    private List<Product> getAllAvailableProducts() {
-        List<Product> availableProducts = new ArrayList<>();
-        for(Category category : allCategories.values()) {
-            availableProducts.addAll(category.getProducts());
-        }
-        return availableProducts;
+    public void removeProduct(int productId) {
+        if(!allProducts.containsKey(productId))
+            throw new IllegalArgumentException("Product ID " + productId + " doesn't exists");
+        allCategories.get(allProducts.get(productId)).removeProduct(productId);
+        allProducts.remove(productId);
+        if(ProductsToRestock.contains(productId))
+        ProductsToRestock.remove(ProductsToRestock.indexOf(productId));
     }
 
     public List<String> getProductsNeedingRestock() {

@@ -8,6 +8,10 @@ public class Item {
     private Date expirationDate;
 
     public Item(int itemId, int price, Date expirationDate) {
+        if (expirationDate == null)
+            throw new IllegalArgumentException("Expiration date cannot be null");
+        if (price < 0)
+            throw new IllegalArgumentException("Cost price cannot be negative");
         this.itemId = itemId;
         this.costPrice = price;
         this.expirationDate = expirationDate;

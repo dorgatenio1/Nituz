@@ -1,22 +1,26 @@
-package Presentation_Layer;
+package presentation;
 
 import java.util.Scanner;
 
 public class InputReaderScanner implements InputReader {
-    private Scanner scanner;
-    public InputReaderScanner(Scanner scanner){
-        this.scanner=scanner;
+
+    private final Scanner scanner;
+
+    public InputReaderScanner() {
+        this.scanner = new Scanner(System.in);
     }
+
     @Override
     public String readString() {
         return scanner.nextLine().trim();
     }
+
     @Override
     public int readInt() {
         try {
-            return Integer.parseInt(scanner.nextLine().trim());
+            return Integer.parseInt(readString());
         } catch (NumberFormatException e) {
-            return -1; // Return an invalid option to trigger the default case
+            return -1;
         }
     }
 }

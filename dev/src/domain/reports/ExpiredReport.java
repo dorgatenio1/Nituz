@@ -20,12 +20,12 @@ public class ExpiredReport extends Report<Item> {
     @Override
     public String getSummary() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Expired Items Report - ").append(getPublishDate()).append("\n");
-        sb.append("Period: ").append(startDate).append(" to ").append(endDate).append("\n");
+        sb.append("Expired Items Report - ").append(DATE_FORMAT.format(getPublishDate())).append("\n");
+        sb.append("Period: ").append(DATE_FORMAT.format(startDate)).append(" to ").append(DATE_FORMAT.format(endDate)).append("\n");
         sb.append("Expired items:\n");
         for (Item item : getData()) {
-            sb.append("- Barcode: ").append(item.getItemId())        
-              .append(" | Expired: ").append(item.getExpirationDate())
+            sb.append("- Barcode: ").append(item.getItemId())
+              .append(" | Expired: ").append(DATE_FORMAT.format(item.getExpirationDate()))
               .append("\n");
         }
         return sb.toString();

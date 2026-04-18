@@ -24,6 +24,10 @@
         public Product(int productId,  String name, String manufacturer, String subCategory,
                 String subSubCategory,
                 String shelfLocation, int priceWithoutDiscount, int minToRestock) {
+            if (priceWithoutDiscount < 0)
+                throw new IllegalArgumentException("Price cannot be negative");
+            if (minToRestock < 0)
+                throw new IllegalArgumentException("Minimum restock quantity cannot be negative");
             this.productId = productId;
             this.name = name;
             this.manufacturer = manufacturer;
