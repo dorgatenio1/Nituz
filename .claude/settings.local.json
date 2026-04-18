@@ -4,7 +4,12 @@
       "Read(//mnt/c/Users/דור/Desktop/**)",
       "Bash(dir \"C:\\\\Users\\\\דור\\\\Desktop\\\\Nituz 2\")",
       "Bash(xargs grep:*)",
-      "Bash(javac -cp dev/src -d dev/out dev/src/domain/*.java dev/src/domain/reports/*.java dev/src/service/*.java dev/src/presentation/*.java)"
+      "Bash(javac -cp dev/src -d dev/out dev/src/domain/*.java dev/src/domain/reports/*.java dev/src/service/*.java dev/src/presentation/*.java)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\דור\\\\Desktop\\\\Nituz 2\\\\lib\")",
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar\" -o \"C:\\\\Users\\\\דור\\\\Desktop\\\\Nituz 2\\\\lib\\\\junit-4.13.2.jar\")",
+      "Bash(curl -sL \"https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar\" -o \"C:\\\\Users\\\\דור\\\\Desktop\\\\Nituz 2\\\\lib\\\\hamcrest-core-1.3.jar\")",
+      "Bash(javac -cp \"dev/src;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar\" -d dev/out dev/src/domain/*.java dev/src/domain/reports/*.java dev/src/service/*.java dev/src/presentation/*.java dev/test/*.java)",
+      "Bash(java -cp \"dev/out;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar\" org.junit.runner.JUnitCore test.DomainTests test.ServiceTests test.PresentationTests)"
     ]
   }
 }

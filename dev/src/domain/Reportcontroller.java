@@ -66,7 +66,7 @@ public class Reportcontroller {
     public Response<Report<?>> generateDefectReport() {
         try {
             List<DefectItem> items = new ArrayList<>(inventoryController.getDefectiveItems());
-            DefectReport report = new DefectReport(generateReportId(), items, null, new Date());
+            DefectReport report = new DefectReport(generateReportId(), items, new Date(0), new Date());
             saveReport(report);
             return new Response<>(report, "");
         } catch (Exception e) {
@@ -112,6 +112,11 @@ public class Reportcontroller {
         } catch (Exception e) {
             return new Response<>(e.getMessage());
         }
+    }
+
+    public void resetAll() {
+        this.reportCount = 0;
+        this.reports = new ArrayList<>();
     }
 
     public Response<Report<?>> generateOrderReport() {

@@ -21,7 +21,10 @@ public class Category {
         return categoryName;
     }
 
-    public double getFinalPrice(int productId) {return (((100 - discounts.getBestActiveDiscount(new Date()) / 100)) * getProduct(productId).getPrice());} 
+    public double getFinalPrice(int productId) {
+        double discount = discounts.getBestActiveDiscount(new Date());
+        return getProduct(productId).getPrice() * (100 - discount) / 100;
+    }
     
     public SoldItem sellItem(int productId, Date sellDate,int itemId) {
         return getProduct(productId).sellItem(itemId, sellDate, getFinalPrice(productId));
