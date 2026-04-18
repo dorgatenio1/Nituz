@@ -21,6 +21,7 @@ public class InventoryMenu {
     }
 
     public void start() {
+        showLowStockAlerts();
         boolean running = true;
         while (running) {
             printMenu();
@@ -35,6 +36,15 @@ public class InventoryMenu {
             }
         }
         System.out.println("Goodbye!");
+    }
+
+    private void showLowStockAlerts() {
+        var response = service.showProductToRestock();
+        if (!response.isSuccess() || response.getValue().isEmpty()) return;
+        System.out.println("\n*** ALERT: The following products are below minimum stock level ***");
+        for (String product : response.getValue())
+            System.out.println("  - " + product);
+        System.out.println("*".repeat(55));
     }
 
     private void printMenu() {

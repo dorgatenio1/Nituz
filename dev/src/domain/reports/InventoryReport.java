@@ -29,8 +29,9 @@ public class InventoryReport extends Report<Product> {
               .append(" sub category: ").append(p.getSubCategory())
               .append(" subsub category: ").append(p.getSubSubCategory())
               .append(" | Shelf: ").append(p.getShelfQuantity())
-              .append(", Warehouse: ").append(p.getStorageItemsQuantity())
+              .append(", Storage: ").append(p.getStorageItemsQuantity())
               .append(", Total: ").append(p.getTotalQuantity())
+              .append(" | Min To Restock: ").append(p.getMinToRestock())
               .append(" | Location: ").append(p.getShelfLocation())
               .append("\n");
         }
